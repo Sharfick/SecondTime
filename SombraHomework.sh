@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 MAKE_PATH=/mnt/gentoo/etc/portage/make.conf
 
 STAGE3_FILE=$(curl -s http://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/latest-stage3-amd64-desktop-systemd.txt | grep -v '#' | awk '{print $1}')
@@ -7,7 +9,7 @@ STAGE3_FILE=$(curl -s http://mirror.yandex.ru/gentoo-distfiles/releases/amd64/au
 STAGE3_URL=http://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds
 
 echo "установка времени"
-ntpd -q -g
+#ntpd -q -g
 
 password() {
 	echo "придумайте пароль для root"
@@ -18,9 +20,9 @@ password() {
 partition() {
 
 	DISK=$1
-	lsblk -o NAME,FSTYPE -dsn | awk "$1 == $DISK {CHECK=true}"
+	lsblk -o NAME,FSTYPE -dsn | awk   "$1 == ${DISK} ${P_CHECK=true}"
 
-	if [ "$DISK" == "true" ] ; then
+	if [ "$P_CHECK" == "true" ] ; then
 		echo "Такой диск есть. Разметить его? (yes/no)"
 		read ANSWER
 		if [ "$ANSWER" == "yes" ] ; then
@@ -102,10 +104,10 @@ error_exit(){
 
 
 #password || error_exit "password error"
-#echo "укажите диск для разметки"
-#read DISK
-#partition $DISK || error_exit "partition error"
+echo "укажите диск для разметки"
+read DISK
+partition $DISK || error_exit "partition error"
 #make_fsys || error_exit "make_fsys  error"
-stage3_install || error_exit "stage3_install error"
+#stage3_install || error_exit "stage3_install error"
 #compiling_setting || error_exit "compiling_setting error"
 #make_chroot || error_exit "make_chroot error"
