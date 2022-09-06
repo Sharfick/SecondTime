@@ -1,12 +1,14 @@
 #!/bin/bash
 
+#lsblk -o NAME,FSTYPE -dsn | awk  '{if ($1 == "'$DISK'") {P_CHECK="true"}}'
+
 set -x
 
 MAKE_PATH=/mnt/gentoo/etc/portage/make.conf
 
-STAGE3_FILE=$(curl -s http://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/latest-stage3-amd64-desktop-systemd.txt | grep -v '#' | awk '{print $1}')
+#STAGE3_FILE=$(curl -s http://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/latest-stage3-amd64-desktop-systemd.txt | grep -v '#' | awk '{print $1}')
 
-STAGE3_URL=http://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds
+#STAGE3_URL=http://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds
 
 echo "установка времени"
 #ntpd -q -g
@@ -18,11 +20,10 @@ password() {
 
 
 partition() {
-
+	cd
 	DISK=$1
-	lsblk -o NAME,FSTYPE -dsn | awk   "$1 == ${DISK} ${P_CHECK=true}"
-
-	if [ "$P_CHECK" == "true" ] ; then
+	P_CHECK=$(lsblk -o NAME,FSTYPE -dSn | grep -o $DISK)
+	if [ "$P_CHECK" == "$DISK" ] ; then
 		echo "Такой диск есть. Разметить его? (yes/no)"
 		read ANSWER
 		if [ "$ANSWER" == "yes" ] ; then
@@ -49,6 +50,7 @@ partition() {
 			echo "goodbuy" ; exit 0
 		fi
 	fi
+	cd
 }
 
 make_fsys() {
