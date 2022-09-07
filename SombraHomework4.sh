@@ -14,8 +14,8 @@ driver_install(){
 
 	passwd $NAME
 
-	echo "VIDEO_CARDS='amdgpu radeon radensi'" >>$MAKE_PATH
-	echo "INPUT_DEVICES='synaptics libinput'" >>$MAKE_PATH
+	echo "VIDEO_CARDS='amdgpu radeon radensi'" >$MAKE_PATH
+	echo "INPUT_DEVICES='synaptics libinput'" >$MAKE_PATH
 
 	emerge --pretend --verbose x11-base/xorg-drivers
 	emerge --ask x11-base/xorg-server
