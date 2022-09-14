@@ -69,6 +69,7 @@ stage3_install() {
       	wget $STAGE3_URL/$STAGE3_FILE
 	tar xpvf ${STAGE3_FILE:17}
 	cd
+	mount /dev/sda1 /mnt/gentoo/boot
 }
 
 compiling_setting() {
